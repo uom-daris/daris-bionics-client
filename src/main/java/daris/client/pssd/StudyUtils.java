@@ -11,12 +11,11 @@ import arc.xml.XmlStringWriter;
 
 public class StudyUtils {
 
-    public static String findOrCreateStudy(ServerClient.Connection cxn,
-            String pid, String step, String studyName, String studyDescription,
-            PrintStream ps) throws Throwable {
+    public static String findOrCreateStudy(ServerClient.Connection cxn, String pid, String step, String studyName,
+            String studyDescription, XmlDoc.Element meta, PrintStream ps) throws Throwable {
         String studyCid = findStudy(cxn, pid, studyName);
         if (studyCid == null) {
-            studyCid = createStudy(cxn, pid, step, studyName, studyDescription);
+            studyCid = createStudy(cxn, pid, step, studyName, studyDescription, meta);
         } else {
             if (ps != null) {
                 ps.println("study " + studyCid + " already exists.");
@@ -25,19 +24,16 @@ public class StudyUtils {
         return studyCid;
     }
 
-    public static String createStudy(ServerClient.Connection cxn, String pid,
-            String step, String studyName, String studyDescription)
-                    throws Throwable {
+    public static String createStudy(ServerClient.Connection cxn, String pid, String step, String studyName,
+            String studyDescription, XmlDoc.Element meta) throws Throwable {
         String exMethodCid = findExMethod(cxn, pid);
         if (step == null) {
             List<String> exMethodSteps = findExMethodSteps(cxn, exMethodCid);
             if (exMethodSteps == null || exMethodSteps.isEmpty()) {
-                throw new Exception(
-                        "No step found in ex-method: '" + exMethodCid + "'");
+                throw new Exception("No step found in ex-method: '" + exMethodCid + "'");
             }
             if (exMethodSteps.size() > 1) {
-                throw new Exception("More than one step found in ex-method: '"
-                        + exMethodCid + "'");
+                throw new Exception("More than one step found in ex-method: '" + exMethodCid + "'");
             }
             step = exMethodSteps.get(0);
         }
@@ -51,39 +47,35 @@ public class StudyUtils {
         if (studyDescription != null) {
             w.add("description", studyDescription);
         }
-        return cxn.execute("om.pssd.study.create", w.document(), null, null)
-                .value("id");
+        if (meta != null) {
+            w.push("meta");
+            w.addAll(meta.elements());
+            w.pop();
+        }
+        return cxn.execute("om.pssd.study.create", w.document(), null, null).value("id");
     }
 
-    private static String findExMethod(ServerClient.Connection cxn, String pid)
-            throws Throwable {
+    private static String findExMethod(ServerClient.Connection cxn, String pid) throws Throwable {
         XmlDoc.Element ae = ObjectUtils.getAssetMeta(cxn, pid);
         String objectType = ae.value("meta/daris:pssd-object/type");
         if ("ex-method".equals(objectType)) {
             return pid;
         } else if ("subject".equals(objectType)) {
-            XmlDoc.Element re = cxn
-                    .execute("asset.query",
-                            "<where>cid in '" + pid
-                                    + "'</where><action>get-cid</action>",
-                            null, null);
+            XmlDoc.Element re = cxn.execute("asset.query",
+                    "<where>cid in '" + pid + "'</where><action>get-cid</action>", null, null);
             if (re.count("cid") > 1) {
-                throw new Exception("More than one ex-method found in subject '"
-                        + pid + "'.");
+                throw new Exception("More than one ex-method found in subject '" + pid + "'.");
             }
             return re.value("cid");
         } else {
             throw new Exception(
-                    "Expect citable id of ex-method or subject. Found objec type: "
-                            + objectType + " cid: " + pid);
+                    "Expect citable id of ex-method or subject. Found objec type: " + objectType + " cid: " + pid);
         }
     }
 
-    private static List<String> findExMethodSteps(ServerClient.Connection cxn,
-            String exMethodCid) throws Throwable {
+    private static List<String> findExMethodSteps(ServerClient.Connection cxn, String exMethodCid) throws Throwable {
         Collection<String> steps = cxn
-                .execute("om.pssd.ex-method.study.step.find",
-                        "<id>" + exMethodCid + "</id>", null, null)
+                .execute("om.pssd.ex-method.study.step.find", "<id>" + exMethodCid + "</id>", null, null)
                 .values("ex-method/step");
         if (steps == null || steps.isEmpty()) {
             return null;
@@ -91,14 +83,11 @@ public class StudyUtils {
         return new ArrayList<String>(steps);
     }
 
-    static String findStudy(ServerClient.Connection cxn, String pid,
-            String studyName) throws Throwable {
+    static String findStudy(ServerClient.Connection cxn, String pid, String studyName) throws Throwable {
         StringBuilder query = new StringBuilder();
-        query.append("(model='om.pssd.study' and (cid starts with '" + pid
-                + "' or cid='" + pid + "'))");
+        query.append("(model='om.pssd.study' and (cid starts with '" + pid + "' or cid='" + pid + "'))");
         if (studyName != null) {
-            query.append(
-                    " and (xpath(daris:pssd-object/name)='" + studyName + "')");
+            query.append(" and (xpath(daris:pssd-object/name)='" + studyName + "')");
         }
         XmlStringWriter w = new XmlStringWriter();
         w.add("where", query.toString());
@@ -108,8 +97,7 @@ public class StudyUtils {
             if (re.count("cid") == 1) {
                 return re.value("cid");
             } else {
-                throw new Exception("More than one study found in '" + pid
-                        + "' with name: '" + studyName + "'");
+                throw new Exception("More than one study found in '" + pid + "' with name: '" + studyName + "'");
             }
         }
         return null;

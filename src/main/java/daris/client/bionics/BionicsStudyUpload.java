@@ -4,18 +4,23 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
+import arc.mf.client.AuthenticationDetails;
 import arc.mf.client.ServerClient;
 import arc.mf.client.ServerClient.Connection;
 import arc.xml.XmlDoc;
+import arc.xml.XmlDocMaker;
 import arc.xml.XmlStringWriter;
 import daris.client.ClientApplication;
 import daris.client.ConnectionBuilder;
 import daris.client.pssd.CiteableIdUtils;
 import daris.client.pssd.StudyUtils;
+import daris.client.util.ConnectionUtils;
 
 // @formatter:off
 /*
@@ -34,14 +39,15 @@ import daris.client.pssd.StudyUtils;
  */
 public class BionicsStudyUpload extends BionicsClientApplication {
 
-    public static final String APP_NAME = "bionics-study-upload";
+    public static final String CMD_NAME = "bionics-study-upload";
 
     public static void main(String[] args) {
         ClientApplication.run(new BionicsStudyUpload(), args);
     }
 
-    BionicsStudyUpload() {
-        super(APP_NAME);
+    @Override
+    public final String commandName() {
+        return CMD_NAME;
     }
 
     @Override
@@ -104,7 +110,7 @@ public class BionicsStudyUpload extends BionicsClientApplication {
         System.out.println("  - Uploading study from \"" + studyDir.getCanonicalPath() + "\"...");
         String studyCid = findStudy(cxn, subjectCid, studyDir);
         if (studyCid == null) {
-            studyCid = StudyUtils.createStudy(cxn, subjectCid, null, studyDir.getName(), studyDir.getName());
+            studyCid = createStudy(cxn, subjectCid, studyDir);
             System.out.println("  - Created study " + studyCid);
         } else {
             System.out.println("  - Found existing study " + studyCid + "(name='" + studyDir.getName() + "')");
@@ -125,6 +131,45 @@ public class BionicsStudyUpload extends BionicsClientApplication {
             System.out.println("  - No dataset directory found in \"" + studyDir.getCanonicalPath() + "\"!");
         }
         return studyCid;
+    }
+
+    private static String createStudy(Connection cxn, String subjectCid, File studyDir) throws Throwable {
+        AuthenticationDetails authenticationDetails = ConnectionUtils.authenticationDetails(cxn);
+        String domain = authenticationDetails == null ? null : authenticationDetails.domain();
+        String user = authenticationDetails == null ? null : authenticationDetails.userName();
+        Date studyDate = parseStudyDate(studyDir);
+        XmlDoc.Element meta = null;
+        if (studyDate != null || (domain != null && user != null)) {
+            XmlDocMaker dm = new XmlDocMaker("meta");
+            dm.push("vicnode.daris:vicnode-study");
+            if (domain != null && user != null) {
+                dm.push("ingest");
+                dm.add("domain", domain);
+                dm.add("user", user);
+                dm.add("date", new Date());
+                dm.pop();
+            }
+            if (studyDate != null) {
+                dm.addDateOnly("sdate", studyDate);
+            }
+            dm.pop();
+            meta = dm.root();
+        }
+        return StudyUtils.createStudy(cxn, subjectCid, null, studyDir.getName(), studyDir.getName(), meta);
+    }
+
+    private static Date parseStudyDate(File studyDir) {
+        try {
+            String name = studyDir.getName();
+            String d = name.split("_")[0].trim();
+            if (d.length() == 8/* yyyyMMMd */) {
+                return new SimpleDateFormat("yyyyMMMd").parse(d);
+            } else {
+                return new SimpleDateFormat("yyyyMMMdd").parse(d);
+            }
+        } catch (Throwable e) {
+            return null;
+        }
     }
 
     private static String findStudy(ServerClient.Connection cxn, String pid, File studyDir) throws Throwable {
@@ -148,7 +193,11 @@ public class BionicsStudyUpload extends BionicsClientApplication {
     @Override
     protected void printHelp(PrintStream ps) {
         ps.println();
-        ps.println(String.format("Usage: %s [mediaflux-arguments] --pid <parent-cid> <study-dir>", name()));
+        ps.println(String.format("Usage: %s [mediaflux-arguments] --pid <parent-cid> <study-dir>", commandName()));
+        ps.println();
+        ps.println("    Arguments:");
+        ps.println("    --pid <parent-cid>                    - The citeable id of the parent subject/ex-method.");
+
         ConnectionBuilder.desribeCommandArgs(ps);
     }
 

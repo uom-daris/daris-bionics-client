@@ -31,14 +31,15 @@ import daris.client.pssd.DatasetUtils;
  */
 public class BionicsDatasetUpload extends BionicsClientApplication {
 
-    public static final String APP_NAME = "bionics-dataset-upload";
+    public static final String CMD_NAME = "bionics-dataset-upload";
 
     public static void main(String[] args) {
         ClientApplication.run(new BionicsDatasetUpload(), args);
     }
 
-    BionicsDatasetUpload() {
-        super(APP_NAME);
+    @Override
+    public final String commandName() {
+        return CMD_NAME;
     }
 
     @Override
@@ -130,7 +131,11 @@ public class BionicsDatasetUpload extends BionicsClientApplication {
     @Override
     protected void printHelp(PrintStream ps) {
         ps.println();
-        ps.println(String.format("Usage: %s [mediaflux-arguments] --pid <study-cid> <dataset-dir>", name()));
+        ps.println(String.format("Usage: %s [mediaflux-arguments] --pid <study-cid> <dataset-dir>", commandName()));
+        ps.println();
+        ps.println("    Arguments:");
+        ps.println("    --pid <study-cid>                     - The citeable id of the parent study.");
+
         ConnectionBuilder.desribeCommandArgs(ps);
     }
 

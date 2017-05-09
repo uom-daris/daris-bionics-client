@@ -28,14 +28,15 @@ Project: < EthicsOrg _Ethics#> ……………………UOMHESC_1646801
  */
 public class BionicsProjectUpload extends BionicsClientApplication {
 
-    public static final String APP_NAME = "bionics-project-upload";
+    public static final String CMD_NAME = "bionics-project-upload";
 
     public static void main(String[] args) {
         ClientApplication.run(new BionicsProjectUpload(), args);
     }
 
-    BionicsProjectUpload() {
-        super(APP_NAME);
+    @Override
+    public final String commandName() {
+        return CMD_NAME;
     }
 
     @Override
@@ -127,11 +128,15 @@ public class BionicsProjectUpload extends BionicsClientApplication {
             return null;
         }
     }
-    
+
     @Override
     protected void printHelp(PrintStream ps) {
         ps.println();
-        ps.println(String.format("Usage: %s [mediaflux-arguments] [--id <project-cid>] <project-dir>", name()));
+        ps.println(String.format("Usage: %s [mediaflux-arguments] [--id <project-cid>] <project-dir>", commandName()));
+        ps.println();
+        ps.println("    Arguments:");
+        ps.println(
+                "    --id <project-cid>                    - The citeable id of the project. If not specified, it will look for the project with the same name as the project directory.");
         ConnectionBuilder.desribeCommandArgs(ps);
     }
 

@@ -19,12 +19,10 @@ public abstract class ClientApplication implements Closeable {
         _appName = appName;
     }
 
-    public String name() {
-        return _appName;
-    }
+    public abstract String commandName();
 
     public void open(String[] args) throws Throwable {
-        ConnectionBuilder cb = new ConnectionBuilder(_propertiesFilePath).setApplication(name());
+        ConnectionBuilder cb = new ConnectionBuilder(_propertiesFilePath).setApplication(_appName);
         _args = cb.parseCommandArguments(args);
         _cxn = cb.build();
     }
