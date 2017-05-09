@@ -9,9 +9,9 @@ Client applcations for Brain Bionics Projects. It includes a set of command line
       * Method: &lt;Instrument&gt;………………………………………………………………………EEG_Compumedics or EEG_gUSBamp
         * Data set:&lt;All files&gt;………………………………………………………………………*.hdf5,*.dat
 
-**Table of Commands**
+**List of Tools**
 
-**Command** | **Description** |
+**Name** | **Description** |
 ------------ | -------------
 **bionics-dataset-upload** | Create/Upload a dataset from a local directory.  
 **bionics-study-upload** | Create/Upload a study from a local directory hierarchy. Datasets will be created from the sub-directories. 
