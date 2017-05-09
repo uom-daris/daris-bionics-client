@@ -33,6 +33,7 @@ Client applcations for Brain Bionics Projects. It includes a set of command line
   * **mf.token=XXXXXXXXXXXXXXXXX**
 
 **NOTE:** either **mf.auth** or **mf.token** need to be specified. **mf.auth** value is in the form of <domain,user,password> e.g.
+
   * **mf.auth=aaf:wilson:MyPASS**
 
 
