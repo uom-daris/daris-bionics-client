@@ -1,5 +1,12 @@
 # daris-bionics-client
-Client applcations for Brain Bionics Projects.
+Client applcations for Brain Bionics Projects. It includes a set of command line tools to upload data to Brain Bionics Projects in DaRIS. **NOTE:* The tools are designed and tested only for uploading data from the proposed directory structure.
+
+* **Directory Struture**
+  * Project: < EthicsOrg _Ethics#>……………………………………………UOMHESC_1646801
+    * Subject: <pilot/Expt_initialsOfParticipants>………Pilot_NP or Expt_NP
+      * Session: <YYYYMMMDD_Location>………………………………………………2016May16_CfNE
+        * Method: <Instrument>………………………………………………………………………EEG_Compumedics or EEG_gUSBamp
+          * Data set:<All files>………………………………………………………………………*.hdf5,*.dat
 
 ## Table of Commands
 **Command** | **Description** |
