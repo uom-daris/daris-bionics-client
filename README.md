@@ -24,14 +24,17 @@ Client applcations for Brain Bionics Projects. It includes a set of command line
 * a. Install [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 * b. Download [daris-bionics-client-x.x.x.zip]() and extract it:
   * **cd /opt/; sudo unzip daris-bionics-client-0.0.1.zip**
-* c. Optionally, add the installed directory to PATH environment variable. On Unix, append the following line to ~/.bashrc:
+* c. Optionally, add the installed directory to PATH environment variable. On Unix, append the following line to **~/.bashrc**:
   * **export PATH=$PATH:/opt/daris-bionics-client-0.0.1**
-* d. Configure the server and user authentication details in ~/.daris/daris-bionics-client.properties:
+* d. Configure the server and user authentication details in **~/.daris/daris-bionics-client.properties**:
   * **mf.host=mediaflux.yourdomain.org.au**
   * **mf.port=443**
   * **mf.transport=https**
   * **mf.auth=**
   * **mf.token=XXXXXXXXXXXXXXXXX**
+
+**NOTE:** either **mf.auth** or **mf.token** need to be specified. **mf.auth** value is in the form of <domain,user,password> e.g.
+  * **mf.auth=aaf:wilson:MyPASS**
 
 
 ## 2. Command Usage
@@ -55,9 +58,20 @@ Client applcations for Brain Bionics Projects. It includes a set of command line
 ### bionics-subject-upload
 
 * **Usage**
-  * **bionics-subject-upload [mediaflux-arguments] --pid <project-cid> <subject-dir>**
+  * **bionics-subject-upload --pid <project-cid> <subject-dir>**
 
 * **Example**
-  * **bionics-study-upload --pid 1128.1.8.1 ~/UOMHESC_1646801/Pilot_DUMMY/2017Jan16_CfNE**
+  * **bionics-subject-upload --pid 1128.1.8 ~/UOMHESC_1646801/Pilot_DUMMY**
+
+### bionics-project-upload
+
+* **Usage**
+  * **bionics-project-upload [--id <project-cid>] <project-dir>**
+
+* **Example**
+  * **bionics-project-upload --pid 1128.1.8 ~/UOMHESC_1646801**
+  * **NOTE:** If --pid is not specified, it will look for the project with the same name as the project directory, e.g. UOMHESC_1646801, the command below will also work if the project name is **UOMHESC_1646801**
+  * **bionics-subject-upload ~/UOMHESC_1646801**
+  
   
 
