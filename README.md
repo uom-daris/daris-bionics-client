@@ -4,11 +4,11 @@ Client applcations for Brain Bionics Projects. It includes a set of command line
 **NOTE:** The tools are designed and tested only for uploading data from the proposed directory structure:
 
 * **Directory Struture**
-  * Project: < EthicsOrg _Ethics#>……………………………………………UOMHESC_1646801
-    * Subject: <pilot/Expt_initialsOfParticipants>………Pilot_NP or Expt_NP
-      * Session: <YYYYMMMDD_Location>………………………………………………2016May16_CfNE
-        * Method: <Instrument>………………………………………………………………………EEG_Compumedics or EEG_gUSBamp
-          * Data set:<All files>………………………………………………………………………*.hdf5,*.dat
+  * Project: &lt;EthicsOrg _Ethics#&gt;……………………………………………UOMHESC_1646801
+    * Subject: &lt;pilot/Expt_initialsOfParticipants&gt;………Pilot_NP or Expt_NP
+      * Session: &lt;YYYYMMMDD_Location&gt;………………………………………………2016May16_CfNE
+        * Method: &lt;Instrument&gt;………………………………………………………………………EEG_Compumedics or EEG_gUSBamp
+          * Data set:&lt;All files&gt;………………………………………………………………………*.hdf5,*.dat
 
 **Table of Commands**
 
@@ -42,7 +42,7 @@ Client applcations for Brain Bionics Projects. It includes a set of command line
 ### bionics-dataset-upload
 
 * **Usage**
-  * **bionics-dataset-upload --pid <study-cid> <dataset-dir>**
+  * **bionics-dataset-upload --pid &lt;study-cid&gt; &lt;dataset-dir&gt;**
 
 * **Example**
   * **bionics-dataset-upload --pid 1128.1.8.1.1.1 ~/UOMHESC_1646801/Pilot_DUMMY/2017Jan16_CfNE/EEG_Neuroscan**
@@ -50,7 +50,7 @@ Client applcations for Brain Bionics Projects. It includes a set of command line
 ### bionics-study-upload
 
 * **Usage**
-  * **bionics-study-upload --pid <parent-cid> <study-dir>**
+  * **bionics-study-upload --pid &lt;parent-cid&gt; &lt;study-dir&gt;**
 
 * **Example**
   * **bionics-study-upload --pid 1128.1.8.1 ~/UOMHESC_1646801/Pilot_DUMMY/2017Jan16_CfNE**
@@ -58,7 +58,7 @@ Client applcations for Brain Bionics Projects. It includes a set of command line
 ### bionics-subject-upload
 
 * **Usage**
-  * **bionics-subject-upload --pid <project-cid> <subject-dir>**
+  * **bionics-subject-upload --pid &lt;project-cid&gt; &lt;subject-dir&gt;**
 
 * **Example**
   * **bionics-subject-upload --pid 1128.1.8 ~/UOMHESC_1646801/Pilot_DUMMY**
@@ -66,7 +66,7 @@ Client applcations for Brain Bionics Projects. It includes a set of command line
 ### bionics-project-upload
 
 * **Usage**
-  * **bionics-project-upload [--id <project-cid>] <project-dir>**
+  * **bionics-project-upload [--id &lt;project-cid&gt;] &lt;project-dir&gt;**
 
 * **Example**
   * **bionics-project-upload --pid 1128.1.8 ~/UOMHESC_1646801**
