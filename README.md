@@ -21,7 +21,7 @@ Client applcations for Brain Bionics Projects. It includes a set of command line
 ## 1. Installation
 
 * a. Install [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
-* b. Download [daris-bionics-client-0.0.2.zip](https://github.com/uom-daris/daris-bionics-client/releases/download/v0.0.2/daris-bionics-client-0.0.2.zip) and extract it:
+* b. Download [daris-bionics-client-0.0.3.zip](https://github.com/uom-daris/daris-bionics-client/releases/download/v0.0.3/daris-bionics-client-0.0.3.zip) and extract it:
   * **cd /opt/; sudo unzip daris-bionics-client-0.0.1.zip**
 * c. Optionally, add the installed directory to PATH environment variable. On Linux/Mac, append the following line to **~/.bashrc**:
   * **export PATH=$PATH:/opt/daris-bionics-client-0.0.1**
