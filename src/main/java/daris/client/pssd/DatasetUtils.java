@@ -29,7 +29,7 @@ public class DatasetUtils {
         String datasetCid = findDataset(cxn, pid, studyName, datasetName, f);
         if (datasetCid != null) {
             if (pm != null) {
-                pm.update(1, 1, "dataset " + datasetCid + " from \"" + f.getAbsolutePath() + "\" already exists.");
+                pm.update(1, 1, "dataset " + datasetCid + " from \"" + f.getCanonicalPath() + "\" already exists.");
             }
             return datasetCid;
         }
@@ -102,12 +102,12 @@ public class DatasetUtils {
         } else {
             input = createInputFromFile(f, gzip, pm);
             if (!gzip && pm != null) {
-                pm.update(0, 1, "Uploading \"" + f.getAbsolutePath() + "\"...");
+                pm.update(0, 1, "Uploading \"" + f.getCanonicalPath() + "\"...");
             }
         }
         String datasetCid = cxn.execute("om.pssd.dataset.derivation.create", w.document(), input, null).value("id");
         if (!f.isDirectory() && !gzip && pm != null) {
-            pm.update(1, 1, "Uploaded \"" + f.getAbsolutePath() + "\".");
+            pm.update(1, 1, "Uploaded \"" + f.getCanonicalPath() + "\".");
         }
         return datasetCid;
     }
@@ -151,7 +151,7 @@ public class DatasetUtils {
         w.pop();
         w.push("meta");
         w.push("mf-note");
-        w.add("note", "source: " + f.getCanonicalPath());
+        w.add("note", "source: " + f.getCanonicalPath().replace('\\', '/'));
         w.pop();
         w.pop();
     }
@@ -159,18 +159,18 @@ public class DatasetUtils {
     private static Input createInputFromFile(final File f, boolean gzip, final ProgressMonitor pm) throws Throwable {
         ServerClient.Input input = null;
         if (gzip) {
-            input = new ServerClient.GeneratedInput("application/x-gzip", "gz", f.getAbsolutePath(), -1, null) {
+            input = new ServerClient.GeneratedInput("application/x-gzip", "gz", f.getCanonicalPath().replace('\\', '/'), -1, null) {
                 @Override
                 protected void copyTo(OutputStream out, AbortCheck ac) throws Throwable {
                     InputStream in = new BufferedInputStream(new FileInputStream(f));
                     GZIPOutputStream gout = new GZIPOutputStream(out);
                     try {
                         if (pm != null) {
-                            pm.update(0, 1, "Uploading \"" + f.getAbsolutePath() + "\"...");
+                            pm.update(0, 1, "Uploading \"" + f.getCanonicalPath() + "\"...");
                         }
                         StreamCopy.copy(in, gout, ac);
                         if (pm != null) {
-                            pm.update(1, 1, "Uploaded \"" + f.getAbsolutePath() + "\".");
+                            pm.update(1, 1, "Uploaded \"" + f.getCanonicalPath() + "\".");
                         }
                     } finally {
                         in.close();
@@ -188,7 +188,7 @@ public class DatasetUtils {
             final ProgressMonitor pm) throws Throwable {
 
         return new ServerClient.GeneratedInput(archiveType.mimeType(), archiveType.fileExtension(),
-                dir.getAbsolutePath(), -1, null) {
+                dir.getCanonicalPath().replace('\\', '/'), -1, null) {
             @Override
             protected void copyTo(OutputStream out, AbortCheck ac) throws Throwable {
                 Archive.declareSupportForAllTypes();
@@ -205,7 +205,7 @@ public class DatasetUtils {
     static String findDataset(ServerClient.Connection cxn, String pid, String studyName, String datasetName, File f)
             throws Throwable {
         StringBuilder query = new StringBuilder();
-        query.append("(model='om.pssd.dataset' and xpath(mf-note/note) ends with '" + f.getAbsolutePath() + "')");
+        query.append("(model='om.pssd.dataset' and xpath(mf-note/note) ends with '" + f.getCanonicalPath().replace('\\', '/') + "')");
         if (pid != null) {
             query.append(" and (cid starts with '" + pid + "' or cid='" + pid + "')");
         }

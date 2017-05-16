@@ -112,7 +112,7 @@ public class BionicsDatasetUpload extends BionicsClientApplication {
         query.append(" and model='om.pssd.dataset'");
         query.append(" and xpath(daris:pssd-object/name)='" + f.getName() + "'");
         query.append(" and xpath(mf-note/note)='source: ");
-        query.append(f.getCanonicalPath()).append("'");
+        query.append(f.getCanonicalPath().replace('\\', '/')).append("'");
         XmlStringWriter w = new XmlStringWriter();
         w.add("where", query);
         w.add("action", "get-cid");
