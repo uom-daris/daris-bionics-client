@@ -1,3 +1,3 @@
 @echo off
 
-java -cp %~dp0\daris-bionics-client.jar daris.client.bionics.BionicsSubjectUpload %*
+cmd /k java -cp %~dp0\daris-bionics-client.jar daris.client.bionics.BionicsSubjectUpload %*
