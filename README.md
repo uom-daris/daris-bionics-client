@@ -69,7 +69,7 @@ Client applcations for Brain Bionics Projects. It includes a set of command line
   * **bionics-project-upload [--id &lt;project-cid&gt;] &lt;project-dir&gt;**
 
 * **Example**
-  * **bionics-project-upload --pid 1128.1.8 ~/UOMHESC_1646801**
+  * **bionics-project-upload --id 1128.1.8 ~/UOMHESC_1646801**
   * **NOTE:** If --pid is not specified, it will look for the project with the same name as the project directory, e.g. UOMHESC_1646801, the command below will also work if the project name is **UOMHESC_1646801**
   * **bionics-subject-upload ~/UOMHESC_1646801**
   
